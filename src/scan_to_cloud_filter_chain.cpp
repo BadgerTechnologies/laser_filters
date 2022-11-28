@@ -156,7 +156,6 @@ public:
       channel_options_ |= laser_geometry::channel_option::Viewpoint;
 
     filter_.setTargetFrame(target_frame_);
-    filter_.registerCallback(boost::bind(&ScanToCloudFilterChain::scanCallback, this, _1));
     filter_.setTolerance(ros::Duration(tf_tolerance_));
 
     if (using_scan_topic_deprecated_)
@@ -188,6 +187,8 @@ public:
       scan_filter_chain_.configure("scan_filter_chain", private_nh);
 
     deprecation_timer_ = nh.createTimer(ros::Duration(5.0), boost::bind(&ScanToCloudFilterChain::deprecation_warn, this, _1));
+
+    filter_.registerCallback(boost::bind(&ScanToCloudFilterChain::scanCallback, this, _1));
 
     LASER_INFO("Scan to cloud filter initialized.");
   }
